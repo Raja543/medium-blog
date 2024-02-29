@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nixie Tube Clock</title>
+    <link rel="stylesheet"href="style.css">
+</head>
+<body>
+    <svg id="noise-svg">
+        <!-- gives background a bit of taxture -->
+        <filter id='noiseFilter'>
+            <feTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch' />
+        </filter>
+        <rect id="noise-rect" filter='url(#noiseFilter)' />
+       </svg>
+       
+       <div class="clock off">
+         <div class="shadow"></div>
+         
+         <div class="base-contauner"><div class="base"><div></div></div></div>
+         <div class="small-outer-pipe">
+           <div class="small-inner-pipe"></div>
+          </div>
+          <div class="outer-pipe">
+            <div class="inner-pipe"></div>
+           </div>
+           <div class="pipe-accents">
+             <div class="top-tube"></div>
+             <div class="tube-holders">
+               <div></div>
+               <div></div>
+               <div></div>
+               <div></div>
+               <div></div>
+               <div></div>
+             </div>
