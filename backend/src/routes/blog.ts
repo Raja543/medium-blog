@@ -1,42 +1,35 @@
+import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { Hono } from "hono";
-import { verify } from "hono/jwt";
+import { blogContext } from "../context";
+import {
+  blogAuth,
+  blogCreateValidation,
+  blogUpdateValidation,
+} from "../middlewares/blog";
 
-export const blogRouter = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-    JWT_SECRET: string;
-  };
-  Variables: {
-    userId: string;
-  };
-}>();
+const blogRouter = new Hono<blogContext>();
 
-blogRouter.use(async (c, next) => {
-  const jwt = c.req.header("Authorization");
-  console.log(jwt, "this is jwt");
-  if (!jwt) {
-    c.status(401);
-    return c.json({ error: "unauthorized jwt" });
+blogRouter.get("/:id", async (c) => {
+  const id = c.req.param("id");
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  const post = await prisma.post.findUnique({ where: { id } });
+  if (!post) {
+    return c.json({ error: "Blog doesn't exist." });
   }
-  const token = jwt.split(" ")[1];
-  const payload = await verify(token, c.env.JWT_SECRET);
-  if (!payload) {
-    c.status(401);
-    return c.json({ error: "unauthorized payload" });
-  }
-  c.set("userId", payload.id);
-  await next();
+  return c.json(post);
 });
 
-blogRouter.post("/", async (c) => {
-  const userId = c.get("userId");
+blogRouter.post("/", blogAuth, blogCreateValidation, async (c) => {
+  const userId = c.get("jwtPayload").id;
   const prisma = new PrismaClient({
-    datasourceUrl: c.env?.DATABASE_URL,
+    datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
-  const body = await c.req.json();
+  const body = c.get("body");
+
   const post = await prisma.post.create({
     data: {
       title: body.title,
@@ -49,14 +42,15 @@ blogRouter.post("/", async (c) => {
   });
 });
 
-blogRouter.put("/", async (c) => {
-  const userId = c.get("userId");
+blogRouter.put("/", blogAuth, blogUpdateValidation, async (c) => {
+  const userId = c.get("jwtPayload").id;
   const prisma = new PrismaClient({
-    datasourceUrl: c.env?.DATABASE_URL,
+    datasourceUrl: c.env.DATABASE_URL,
   }).$extends(withAccelerate());
 
-  const body = await c.req.json();
-  prisma.post.update({
+  const body = c.get("body");
+
+  const post = await prisma.post.update({
     where: {
       id: body.id,
       authorId: userId,
@@ -66,24 +60,9 @@ blogRouter.put("/", async (c) => {
       content: body.content,
     },
   });
-
-  return c.text("updated post");
-});
-
-blogRouter.get("/:id", async (c) => {
-  const id = c.req.param("id");
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env?.DATABASE_URL,
-  }).$extends(withAccelerate());
-
-  const post = await prisma.post.findUnique({
-    where: {
-      id,
-    },
+  return c.json({
+    id: post.id,
   });
-
-  return c.json(post);
 });
 
-// "email" : "raja44@gmail.com",
-//    "password" : "raja1234"
+export default blogRouter;
