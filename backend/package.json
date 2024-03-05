@@ -6,11 +6,19 @@
   "dependencies": {
     "@prisma/client": "^5.10.2",
     "@prisma/extension-accelerate": "^0.6.3",
-    "hono": "^4.0.5",
+    "@tiger6178/medium-common": "^1.0.0",
+    "aws-sdk": "^2.1570.0",
+    "bcrypt": "^5.1.1",
+    "hono": "^4.0.9",
+    "jsonwebtoken": "^9.0.2",
+    "mock-aws-s3": "^4.0.2",
+    "nock": "^13.5.4",
     "prisma": "^5.10.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240208.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "wrangler": "^3.25.0"
   }
 }

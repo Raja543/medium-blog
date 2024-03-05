@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { userRouter } from "./routes/user";
+import { authRouter } from "./routes/auth";
 import { blogRouter } from "./routes/blog";
 
 export const app = new Hono<{
@@ -9,8 +9,9 @@ export const app = new Hono<{
   };
 }>();
 
-app.route("/api/v1/user", userRouter);
+app.route("/api/v1/user", authRouter);
 app.route("/api/v1/blog", blogRouter);
+
 
 export default app;
 
@@ -24,5 +25,5 @@ export default app;
 // zod as the validation library, type inference for the frontend types
 // Typescript as a language
 // Prisma as the ORM, with connection pooling
-// Postgres as the database
+// Postgres as the database 
 // jwt for authentication (cookies)

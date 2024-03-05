@@ -1,6 +1,13 @@
 name = "backend"
 compatibility_date = "2023-12-01"
 
+node_compat = true
+
 [vars]
 DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMTdkM2QzODUtMmI2Ny00NWFkLWFlZGItYTRkNGJmODc2MzNhIiwidGVuYW50X2lkIjoiZDUxY2VjMDE1ZTRkMGU1YTM2ZThiZWI1ZDQ4ODM1NGM4NDgwODU4ZWE1ZmY0NTVlODZiMTg1ZmQ4YjdmM2M3YSIsImludGVybmFsX3NlY3JldCI6IjNhNzhhNWVmLTAzMjEtNDQwOS04ZDYyLTM0ZjYxYjcxZTEzYiJ9.wx_xIOtxPfUxooHPpVQwcQ7BWiF3SmbOhCSHqKTPlAw"
 JWT_SECRET = "mediumblog123"
+ACCESS_TOKEN_SECRET = "accessblog123"
+REFRESH_TOKEN_SECRET = "refreshblog123"
+
+[build]
+ignore = ["mock-aws-s3", "aws-sdk", "nock"]
