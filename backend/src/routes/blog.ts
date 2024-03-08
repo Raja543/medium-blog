@@ -60,9 +60,24 @@ blogRouter.put("/", blogAuth, blogUpdateValidation, async (c) => {
       content: body.content,
     },
   });
-  return c.json({
-    id: post.id,
+  return c.text("blog updated");
+});
+
+blogRouter.delete("/:id", blogAuth, async (c) => {
+  const userId = c.get("jwtPayload").id;
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const id = c.req.param("id");
+
+  const post = await prisma.post.delete({
+    where: {
+      id,
+      authorId: userId,
+    },
   });
+  return c.text("blog deleted");
 });
 
 export default blogRouter;
