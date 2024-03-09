@@ -30,3 +30,4 @@ export const blogUpdateValidation : MiddlewareHandler = async (c,next) => {
   c.set("body",body);
   await next();
 }
+
